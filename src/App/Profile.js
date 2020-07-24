@@ -101,7 +101,7 @@ export default class Main extends Component {
   }
   Activate() {
     this.setState({
-      pp: true,
+      pp: !this.state.pp,
     });
     console.log(this.state.pp);
   }
@@ -109,10 +109,16 @@ export default class Main extends Component {
     return (
       <>
         {this.state.pp ? (
-          <WebView
-            style={{width: '100%', height: '100%'}}
-            source={{uri: 'https://logrocket.com/'}}
-          />
+          <>
+            <TouchableOpacity
+              onPress={this.Activate.bind(this)}>
+              <Text style={{color:'#6E9CD2',fontSize:24, textAlign:'center', backgroundColor: '#3C3C434A', paddingTop:15}}>Exit</Text>
+            </TouchableOpacity>
+            <WebView
+              style={{width: '100%', height: '100%'}}
+              source={{uri: 'https://dailyworkoutapps.com/privacy-policy.html'}}
+            />
+          </>
         ) : (
           <ScrollView
             style={{backgroundColor: 'white'}}
