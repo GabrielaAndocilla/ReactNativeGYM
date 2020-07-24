@@ -9,10 +9,14 @@ import Hello3M from './src/FirstConfiguration/Hello3M';
 import Hello3F from './src/FirstConfiguration/Hello3F';
 import Hello4 from './src/FirstConfiguration/Hello4';
 import Hello5 from './src/FirstConfiguration/Hello5';
+
 import SignIn from './src/SingInOut/SignIn';
+import Register from './src/SingInOut/Register';
+
+
 import Main from './src/App/Main';
+import Profile from './src/App/Profile';
 import BotMenu from './src/App/Navigation/BotMenu';
-import youtu from './src/App/youtube';
 
 
 
@@ -35,7 +39,7 @@ function App() {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="BotMenu" component={BotMenu} />
-        <Stack.Screen name="youtu" component={youtu} />
+        <Stack.Screen name="Register" component={Register} />
 
 
 

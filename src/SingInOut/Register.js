@@ -11,13 +11,17 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export class SignIn extends Component {
+export class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
       next: false,
       name: '',
+      email:'',
       password: '',
+      password2: '',
+      height:0,
+      weight:0
     };
   }
   componentDidMount() {
@@ -29,10 +33,14 @@ export class SignIn extends Component {
       const a = JSON.stringify(currentUser);
       af = JSON.parse(currentUser);
       console.log('dd', af.height);
+      this.setState({
+        height:af.height,
+        weight:af.weight  
+      })
+
       var data = await JSON.parse(currentUser);
       return data;
     } catch (e) {
-      // error reading value
     }
   };
   async  next() {
@@ -40,25 +48,38 @@ export class SignIn extends Component {
       method: 'POST',
       redirect: 'follow'
     };
+    try{
+        let resp = await fetch("http://gym.areas.su/signup?username="+this.state.name+"&email="+this.state.email+"&password="+this.state.password+"&weight="+this.state.weight+"&height="+this.state.height, requestOptions)
+
+        let data = await resp.json();
+        console.log(data)
+        if(data.notice.answer == "Success"){
+          this.props.navigation.navigate('BotMenu');
     
-    let resp = await fetch("http://gym.areas.su/signin?username="+this.state.name+"&password="+this.state.password, requestOptions)
-     
-    let data = await resp.json();
-    if(data.notice.answer != "Error username or password"){
-      this.props.navigation.navigate('BotMenu');
-
-    }else{
-      Alert.alert(
-        'Login Failed ',
-        "Error username or password",
-        [
-          
-          { text: 'OK', onPress: () => console.log('OK Pressed') }
-        ],
-        { cancelable: false }
-      );
-      }
-
+        }else{
+          Alert.alert(
+            'Register Failed ',
+            "check if all inputs are complete",
+            [
+              
+              { text: 'OK', onPress: () => console.log('OK Pressed') }
+            ],
+            { cancelable: false }
+          );
+          }
+    
+    }catch(e){
+        Alert.alert(
+            'Register Failed ',
+            "check if all inputs are complete",
+            [
+              
+              { text: 'OK', onPress: () => console.log('OK Pressed') }
+            ],
+            { cancelable: false }
+          );
+    }
+    
     this.setState({
       next: true,
     });
@@ -76,6 +97,19 @@ export class SignIn extends Component {
       password: txt,
     });
     console.log(this.state.password)
+  }
+  onChangeTextE(txt) {
+    this.setState({
+      email: txt,
+    });
+    console.log(this.state.email)
+
+  }
+  onChangeTextPP(txt) {
+    this.setState({
+      password2: txt,
+    });
+    console.log(this.state.password2)
   }
   render() {
     return (
@@ -123,10 +157,50 @@ export class SignIn extends Component {
               height: 50.5,
               borderRadius: 50,
               alignSelf: 'center',
+              color:"#AAAAA9"
+
             }}
             placeholder={'Name'}
             placeholderTextColor="#AAAAA9"
             onChangeText={(text) => this.onChangeTextN(text)}
+          />
+        </View>
+        <View
+          style={{
+            width: 312,
+            backgroundColor: 'white',
+            height: 50.5,
+            borderRadius: 50,
+            alignSelf: 'center',
+            marginBottom: 20,
+            flexDirection: 'row',
+            
+
+          }}>
+          <Image
+            style={{
+              width: 30,
+              height: 30,
+              resizeMode: 'contain',
+              alignItems: 'center',
+              margin: 10,
+
+                      }}
+            source={require('../../images/iconsuser.png')}
+          />
+          <View style={{height:51, width:0.99, backgroundColor:'#999999', marginRight:5, opacity:0.5}}/>
+          <TextInput
+            style={{
+              width: 200,
+              backgroundColor: 'white',
+              height: 50.5,
+              borderRadius: 50,
+              alignSelf: 'center',
+              color:"#AAAAA9"
+            }}
+            placeholder={'Email'}
+            placeholderTextColor="#AAAAA9"
+            onChangeText={(text) => this.onChangeTextE(text)}
           />
         </View>
         <View
@@ -168,23 +242,58 @@ export class SignIn extends Component {
             onChangeText={(text) => this.onChangeTextP(text)}
           />
         </View>
+        <View
+          style={{
+            width: 312,
+            backgroundColor: 'white',
+            height: 50.5,
+            borderRadius: 50,
+            alignSelf: 'center',
+            marginBottom: 20,
+            flexDirection: 'row',
+
+          }}>
+          <Image
+            style={{
+              width: 30,
+              height: 30,
+              resizeMode: 'contain',
+              alignItems: 'center',
+              margin: 10,
+
+                      }}
+            source={require('../../images/iconsuser.png')}
+          />
+          <View style={{height:51, width:0.99, backgroundColor:'#999999', marginRight:5, opacity:0.5}}/>
+          <TextInput
+            style={{
+              width: 200,
+              backgroundColor: 'white',
+              height: 50.5,
+              borderRadius: 50,
+              alignSelf: 'center',
+              color:"#AAAAA9"
+            }}
+            placeholder={'Password'}
+            placeholderTextColor="#AAAAA9"
+            secureTextEntry={true}
+
+            onChangeText={(text) => this.onChangeTextPP(text)}
+          />
+        </View>
 
         <TouchableOpacity
           style={
             this.state.next ? styles.subcontainerPressN : styles.subcontainerN
           }
           onPress={this.next.bind(this)}>
-          <Text> Sign In </Text>
+          <Text> Sign Up </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          
-          onPress={()=>{this.props.navigation.navigate('Register')}}>
-          <Text style={{color:'white', alignSelf:'center', textDecorationLine:'underline', fontSize:24, margin:10, marginBottom:60}}> Sign Up </Text>
-        </TouchableOpacity>
+
         <TouchableOpacity
           
           onPress={this.next.bind(this)}>
-          <Text style={{color:'white', alignSelf:'center', textDecorationLine:'underline', fontSize:16}}> Skip </Text>
+          <Text style={{color:'white', alignSelf:'center', textDecorationLine:'underline', fontSize:16, marginBottom:20, marginTop:50}}> Back </Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -237,4 +346,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default Register;

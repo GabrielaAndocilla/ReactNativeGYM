@@ -5,6 +5,8 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Plan from '../Main';
+import Profile from '../Profile';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
@@ -52,7 +54,8 @@ function BotMenu() {
       <Tab.Screen name="Plan" component={Plan} />
       <Tab.Screen name="Lessons" component={Plan} />
       <Tab.Screen name="Reports" component={Plan} />
-      <Tab.Screen name="Profile" component={Plan} />
+      <Tab.Screen name="Profile" component={Profile} />
+
     </Tab.Navigator>
   );
 }
