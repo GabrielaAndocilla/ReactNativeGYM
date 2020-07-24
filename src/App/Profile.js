@@ -6,7 +6,7 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  SafeAreaView,
+  Switch,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient'; // import LinearGradient
@@ -17,11 +17,10 @@ export default class Main extends Component {
     super(props);
     this.state = {
       press: false,
-      videos: [],
+      profile: {},
       visible: false,
       changeH: 0,
     };
-    this.Activate = this.Activate.bind(this);
   }
   async componentDidMount() {
     var requestOptions = {
@@ -29,11 +28,19 @@ export default class Main extends Component {
       redirect: 'follow',
     };
 
-    let videos = await fetch('http://gym.areas.su/lessons', requestOptions);
-    let data = await videos.json();
+    var requestOptions = {
+      method: 'POST',
+      redirect: 'follow',
+    };
 
+    let profile = await fetch(
+      'http://gym.areas.su/profile?token=274965',
+      requestOptions,
+    );
+    let data = await profile.json();
+    console.log('USe', data);
     this.setState({
-      videos: data,
+      profile: data[0],
     });
   }
   imgGet(vid) {
@@ -50,175 +57,116 @@ export default class Main extends Component {
       return require('../../images/fitness_legs.png');
     }
   }
-  Activate(vid) {
-    this.setState({
-      press: true,
-      url: vid,
-      visible: true,
-    });
-    console.log(this.state.url);
-  }
 
   page(y) {
     this.setState({
       changeH: y,
     });
-    console.log("H",this.state.changeH);
+    console.log('H', this.state.changeH);
+  };
+
+  Notification(){
+    this.setState({
+        press: !this.state.press,
+      });
   }
 
   render() {
     console.log(this.state.visible);
     return (
-      <View>
-        {this.state.changeH <150 ? (
-          <View style={styles.container}>
-            <LinearGradient
-              colors={['#6E9CD2', '#89ABD4DE', '#B0C1D6B0']}
-              style={styles.linearGradient}
-              start={{x: 0.01, y: 1}}
-              end={{x: 1, y: 0}}>
-              <Text style={styles.title}>Profile</Text>
-              <View style={styles.containerDesc}>
-                <View>
-                  <Text style={styles.text}>0</Text>
-                  <Text style={styles.text}>Trainig</Text>
-                </View>
-                <View>
-                  <Text style={styles.text}>0</Text>
-                  <Text style={styles.text}>Kcal</Text>
-                </View>
-                <View>
-                  <Text style={styles.text}>0</Text>
-                  <Text style={styles.text}>Minutes</Text>
-                </View>
+      <ScrollView
+        style={{backgroundColor: 'white'}}
+        onScroll={(event) => {
+          this.page(event.nativeEvent.contentOffset.y);
+        }}
+        scrollEventThrottle={90}>
+        <View style={styles.container2}>
+          <LinearGradient
+            colors={['#6E9CD2', '#89ABD4DE', '#B0C1D6B0']}
+            style={styles.linearGradient}
+            start={{x: 0.01, y: 1}}
+            end={{x: 1, y: 0}}>
+            <Text style={styles.title2}>
+              {this.state.profile.username ? this.state.profile.username : ''}
+            </Text>
+            <View style={styles.containerDesc2}>
+              <View>
+                <Text style={styles.text2}>{this.state.profile.weight}</Text>
+                <Text style={styles.text2}>Weight</Text>
               </View>
-            </LinearGradient>
-          </View>
-        ) : (
-          <View style={styles.container2}>
-            <LinearGradient
-              colors={['#6E9CD2', '#89ABD4DE', '#B0C1D6B0']}
-              style={styles.linearGradient}
-              start={{x: 0.01, y: 1}}
-              end={{x: 1, y: 0}}>
-              <Text style={styles.title2}>Home Gym</Text>
-              <View style={styles.containerDesc2}>
-                <View>
-                  <Text style={styles.text2}>0</Text>
-                  <Text style={styles.text2}>Trainig</Text>
-                </View>
-                <View>
-                  <Text style={styles.text2}>0</Text>
-                  <Text style={styles.text2}>Kcal</Text>
-                </View>
-                <View>
-                  <Text style={styles.text2}>0</Text>
-                  <Text style={styles.text2}>Minutes</Text>
-                </View>
+              <View>
+                <Text style={styles.text2}>Male</Text>
               </View>
-            </LinearGradient>
-          </View>
-        )}
-
-        <ScrollView
-          style={{backgroundColor: 'white', paddingTop: 50}}
-          onScroll={(event) => {
-
-            this.page(event.nativeEvent.contentOffset.y);
-          }}
-          scrollEventThrottle={90}>
-          {this.state.press ? (
-            <WebView source={{uri: this.state.url}} />
-          ) : (
-            <View />
-          )}
-
-          <View style={{marginBottom: 200}}>
-            {this.state.videos.map((vid, i) => (
-              <TouchableOpacity
-                onPress={() => this.Activate(vid.url)}
-                key={i}
-                style={{marginVertical: 10}}>
-                <ImageBackground
-                  source={this.imgGet(vid)}
-                  style={{width: '100%', marginHorizontal: '5%'}}
-                  imageStyle={styles.image}
-                  key={i}>
-                  <Text style={styles.textI}>{vid.category}</Text>
-                </ImageBackground>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
+              <View>
+                <Text style={styles.text2}>{this.state.profile.height}</Text>
+                <Text style={styles.text2}>Height</Text>
+              </View>
+            </View>
+          </LinearGradient>
+        </View>
+        <TouchableOpacity style={styles.textcont}>
+          <Text style={styles.text}>Training rest</Text>
+          <Text style={styles.text}>30 sec</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.textcont}>
+          <Text style={styles.text}>Notification</Text>
+          <Switch
+            trackColor={{false: '#BAD0E9', true: '#BAD0E9'}}
+            thumbColor={true ? '#76A1D3' : '#76A1D3'}
+            ios_backgroundColor="#BAD0E9"
+            onValueChange={this.Notification.bind(this)}
+            value={this.state.press}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.textcont}>
+          <Text style={styles.text}>Biometric</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.textcont}>
+          <Text style={styles.text}>Start dialog</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.textcont}>
+          <Text style={styles.text}>Privacy policy</Text>
+        </TouchableOpacity>
+        <View style={{marginBottom: 200}}></View>
+      </ScrollView>
     );
   }
 }
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    color: 'white',
-    textAlign: 'center',
-    marginTop: 30,
-    marginBottom: 30,
-  },
   title2: {
     fontSize: 24,
     color: 'white',
+    textAlign: 'center',
   },
 
   text: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#6E9CD2',
-    textAlign: 'center',
+    margin: 10,
+  },
+  textcont: {
+    borderBottomWidth: 1,
+    marginLeft: 20,
+    borderColor: '#3C3C434A',
+    height: 55,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
   },
   text2: {
     fontSize: 15,
     color: 'white',
     textAlign: 'center',
   },
-  textI: {
-    fontSize: 18,
-    color: '#6E9CD2',
-    textAlign: 'auto',
-    paddingTop: 110,
-    padding: 20,
-  },
-  container: {
-    width: '100%',
-    height: 200,
-    position: 'relative',
-  },
   container2: {
     width: '100%',
-    height: 120,
+    height: 100,
     position: 'relative',
   },
   linearGradient: {
-    paddingTop: 20,
-    borderRadius: 5,
-    height: 212,
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  linearGradient2: {
-    paddingTop: 20,
-    borderRadius: 5,
-    height: 192,
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  containerDesc: {
-    backgroundColor: 'white',
     height: 100,
     width: '100%',
-    borderTopEndRadius: 60,
-    borderTopStartRadius: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 20,
-    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   containerDesc2: {
     height: 70,
@@ -228,14 +176,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     textAlign: 'center',
-  },
-  image: {
-    width: '90%',
-    height: 146,
-    borderRadius: 30,
-  },
-  ActivityIndicatorStyle: {
-    flex: 1,
-    justifyContent: 'center',
   },
 });
