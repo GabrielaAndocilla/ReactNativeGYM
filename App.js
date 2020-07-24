@@ -12,6 +12,8 @@ import Hello5 from './src/FirstConfiguration/Hello5';
 import SignIn from './src/SingInOut/SignIn';
 import Main from './src/App/Main';
 import BotMenu from './src/App/Navigation/BotMenu';
+import youtu from './src/App/youtube';
+
 
 
 const Stack = createStackNavigator();
@@ -33,6 +35,7 @@ function App() {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="BotMenu" component={BotMenu} />
+        <Stack.Screen name="youtu" component={youtu} />
 
 
 
