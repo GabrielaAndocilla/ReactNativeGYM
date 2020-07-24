@@ -34,7 +34,7 @@ next(){
   this.setState({
     next: true
   })
-  this.props.navigation.navigate('Main');
+  this.props.navigation.navigate('BotMenu');
 }
   render() {
     return (
