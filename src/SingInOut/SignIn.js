@@ -182,7 +182,7 @@ export class SignIn extends Component {
           <Text style={{color:'white', alignSelf:'center', textDecorationLine:'underline', fontSize:24, margin:10, marginBottom:60}}> Sign Up </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={this.next.bind(this)}>
+          onPress={()=>{this.props.navigation.navigate('BotMenu')}}>
           <Text style={{color:'white', alignSelf:'center', textDecorationLine:'underline', fontSize:16}}> Skip </Text>
         </TouchableOpacity>
       </ScrollView>

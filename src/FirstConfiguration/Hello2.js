@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export class Hello2 extends Component {
   constructor(props) {
@@ -7,7 +8,23 @@ export class Hello2 extends Component {
     this.state = {
       changeF: false,
       changeM: false,
+      nav: false,
     };
+  }
+  async componentDidMount() {
+    
+  }
+  async dat(){
+    console.log('DATA');
+    try {
+      const currentUser = await AsyncStorage.getItem('pp');
+      console.log("CU",currentUser)
+      if (currentUser) {
+        this.setState({
+          nav: true,
+        });
+      }
+    } catch (e) {}
   }
   PressF() {
     this.setState({
@@ -21,15 +38,41 @@ export class Hello2 extends Component {
       changeF: false,
     });
   }
-  PressN(){
-      if(this.state.changeM){
-        this.props.navigation.navigate('Hello3M')
-      }
-      if(this.state.changeF){
-        this.props.navigation.navigate('Hello3F')
+  PressN() {
+    this.dat();
 
+    if (this.state.changeM) {
+      this.storeData();
+
+      if (this.state.nav) {
+        this.props.navigation.navigate('Hello4');
+      } else {
+        this.props.navigation.navigate('Hello3M');
       }
+    }
+    if (this.state.changeF) {
+      this.storeData();
+
+      if (this.state.nav) {
+        this.props.navigation.navigate('Hello4');
+      } else {
+        this.props.navigation.navigate('Hello3F');
+      }
+    }
   }
+  storeData = async () => {
+    try {
+      if (this.state.changeF) {
+        await AsyncStorage.setItem('gender', 'Female');
+      }
+      if (this.state.changeM) {
+        await AsyncStorage.setItem('gender', 'Male');
+      }
+    } catch (e) {
+      // saving error
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -68,8 +111,14 @@ export class Hello2 extends Component {
             <Text style={styles.textGender}> Male </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={this.state.changeF || this.state.changeM ? styles.subcontainerPressN : styles.subcontainerN} onPress={ this.PressN.bind(this)}>
-          <Text > Next </Text>
+        <TouchableOpacity
+          style={
+            this.state.changeF || this.state.changeM
+              ? styles.subcontainerPressN
+              : styles.subcontainerN
+          }
+          onPress={this.PressN.bind(this)}>
+          <Text> Next </Text>
         </TouchableOpacity>
       </View>
     );

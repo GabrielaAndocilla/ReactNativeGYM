@@ -12,11 +12,13 @@ import Hello5 from './src/FirstConfiguration/Hello5';
 
 import SignIn from './src/SingInOut/SignIn';
 import Register from './src/SingInOut/Register';
+import SinOut from './src/SingInOut/SignOut';
 
 
 import Main from './src/App/Main';
 import Profile from './src/App/Profile';
 import BotMenu from './src/App/Navigation/BotMenu';
+import Privacy from './src/App/Privacy';
 
 
 
@@ -40,6 +42,8 @@ function App() {
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="BotMenu" component={BotMenu} />
         <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="SinOut" component={SinOut} />
 
 
 

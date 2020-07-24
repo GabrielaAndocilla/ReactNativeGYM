@@ -292,7 +292,7 @@ export class Register extends Component {
 
         <TouchableOpacity
           
-          onPress={this.next.bind(this)}>
+          onPress={() => this.props.navigation.goBack()}>
           <Text style={{color:'white', alignSelf:'center', textDecorationLine:'underline', fontSize:16, marginBottom:20, marginTop:50}}> Back </Text>
         </TouchableOpacity>
       </ScrollView>
